@@ -97,6 +97,7 @@ const serviceFactory = function(Service) {
         }
       });
 
+      this.started();
       this.ready();
     }
 
