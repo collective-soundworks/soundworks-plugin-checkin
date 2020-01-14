@@ -67,7 +67,7 @@ const serviceFactory = function(Service) {
       this.server.stateManager.observe(async (schemaName, stateId, clientId) => {
         // when a client launches the checkin service, it creates a shared state
         if (schemaName === `s:${this.name}`) {
-          const state = await this.server.stateManager.attach(schemaName, stateId, clientId);
+          const state = await this.server.stateManager.attach(schemaName, stateId);
 
           this.states.set(clientId, state);
 
