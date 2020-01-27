@@ -1,6 +1,6 @@
 {
   "name": "@soundworks/service-checkin",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
   "description": "checkin service for the soundworks framework",
   "authors": [
     "Benjamin Matuszewski"
