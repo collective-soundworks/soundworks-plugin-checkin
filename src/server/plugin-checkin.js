@@ -4,27 +4,22 @@ const schema = {
     default: null,
     nullable: true,
   },
-  label: {
-    type: 'string',
+  data: {
+    type: 'any',
     default: null,
     nullable: true,
   },
 };
 
-/**
- * The `'checkin'` service simply assigns a ticket (unique index) to the client
- * among the available ones. The ticket can optionally be associated with
- * coordinates or label according to the server `setup` configuration.
- */
-const serviceFactory = function(Service) {
-  return class CheckinService extends Service {
+const pluginFactory = function(AbstractPlugin) {
+  return class CheckinPlugin extends AbstractPlugin {
     constructor(server, name, options) {
       super(server, name);
 
       const defaults = {
         order: 'ascending', // ['ascending', 'random']
         capacity: Infinity,
-        labels: [],
+        infos: [],
       };
 
       this.options = this.configure(defaults, options);
@@ -48,12 +43,12 @@ const serviceFactory = function(Service) {
         options.capacity = Infinity;
       }
 
-      // clamp capacity to given positions and labels
-      const numLabels = options.labels.length > 0 ? options.labels.length : Infinity;
+      // clamp capacity to given positions and data
+      const numData = options.data.length > 0 ? options.data.length : Infinity;
 
-      if (numLabels < options.capacity) {
-        options.capacity = Math.min(options.capacity, numLabels);
-        console.warn(`[${this.name}] capacity cropped to number of labels: ${numLabels}`);
+      if (numData < options.capacity) {
+        options.capacity = Math.min(options.capacity, numData);
+        console.warn(`[${this.name}] capacity cropped to number of data: ${numData}`);
       }
 
       if (options.order === 'random' && options.capacity === Infinity) {
@@ -65,7 +60,7 @@ const serviceFactory = function(Service) {
 
     start() {
       this.server.stateManager.observe(async (schemaName, stateId, clientId) => {
-        // when a client launches the checkin service, it creates a shared state
+        // when a client launches the checkin plugin, it creates a shared state
         if (schemaName === `s:${this.name}`) {
           const state = await this.server.stateManager.attach(schemaName, stateId);
 
@@ -79,9 +74,9 @@ const serviceFactory = function(Service) {
           });
 
           // set client index
-          const { capacity, order, labels } = this.options;
+          const { capacity, order, data } = this.options;
           let index = null;
-          let label = null;
+          let datum = null;
 
           if (order === 'random') {
             index = this._getRandomIndex();
@@ -89,11 +84,11 @@ const serviceFactory = function(Service) {
             index = this._getAscendingIndex();
           }
 
-          if (index !== null && labels[index]) {
-            label = labels[index];
+          if (index !== null && data[index]) {
+            datum = data[index];
           }
 
-          state.set({ index, label });
+          state.set({ index: index, data: datum });
         }
       });
 
@@ -148,7 +143,4 @@ const serviceFactory = function(Service) {
   }
 }
 
-// not mandatory
-serviceFactory.defaultName = 'default-service-name';
-
-export default serviceFactory;
+export default pluginFactory;

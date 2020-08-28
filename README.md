@@ -1,89 +1,119 @@
-# `@soundworks/service-checkin`
+# `@soundworks/plugin-checkin`
 
-> The `checkin` service simply assigns a ticket (unique index) to the 
-> client among the available ones. The ticket can optionally be associated 
-> with coordinates or label according to the server `setup` configuration.
+> [`soundworks`](https://github.com/collective-soundworks/soundworks) plugin for assigning a ticket (unique index) to the client among the available ones. The number of available tickets can be limited and tickets can be associated with additional data.
 
-## Install
+## Table of Contents
+
+<!-- toc -->
+
+- [Installation](#installation)
+- [Example](#example)
+- [Usage](#usage)
+  * [Server installation](#server-installation)
+    + [Registering the plugin](#registering-the-plugin)
+    + [Requiring the plugin](#requiring-the-plugin)
+  * [Client installation](#client-installation)
+    + [Registering the plugin](#registering-the-plugin-1)
+    + [Requiring the plugin](#requiring-the-plugin-1)
+  * [Accessing index and data client side](#accessing-index-and-data-client-side)
+- [Credits](#credits)
+- [License](#license)
+
+<!-- tocstop -->
+
+## Installation
 
 ```sh
-npm install --save @soundworks/service-checkin
+npm install @soundworks/plugin-checkin --save
 ```
+
+## Example
+
+A working example can be found in the [https://github.com/collective-soundworks/soundworks-examples](https://github.com/collective-soundworks/soundworks-examples) repository.
 
 ## Usage
 
-### client
+### Server installation
 
-#### registering the service
+#### Registering the plugin
+
+```js
+// index.js
+import { Server } from '@soundworks/core/server';
+import pluginCheckinFactory from '@soundworks/plugin-checkin/server';
+
+const server = new Server();
+server.pluginManager.register('checkin', pluginCheckinFactory, {
+  // order in which the tickets are assigned
+  // defaults to 'ascending'
+  order: 'random',
+  // number of tickets that can be delivered, must be defined
+  // if order is set to random
+  capacity: 4,
+  // data associated to each delivered index, if capacity is not defined
+  // or data.length < capacity, capacity is set to data.length
+  data: ['a', 'b', 'c', 'd'],
+}, []);
+```
+
+#### Requiring the plugin
+
+```js
+// MyExperience.js
+import { AbstractExperience } from '@soundworks/core/server';
+
+class MyExperience extends AbstractExperience {
+  constructor(server, clientType) {
+    super(server, clientType);
+    // require plugin in the experience
+    this.checkin = this.require('checkin');
+  }
+}
+```
+
+### Client installation
+
+#### Registering the plugin
 
 ```js
 // index.js
 import { Client } from '@soundworks/core/client';
-import serviceCheckinFactory from '@soundworks/service-checkin/client';
+import pluginCheckinFactory from '@soundworks/plugin-checkin/client';
 
 const client = new Client();
-client.registerService('checkin', serviceCheckinFactory, {}, []);
+client.pluginManager.register('checkin', pluginCheckinFactory, {}, []);
 ```
 
-#### requiring the service 
+#### Requiring the plugin
 
 ```js
 // MyExperience.js
 import { Experience } from '@soundworks/core/client';
 
 class MyExperience extends Experience {
-  constructor() {
-    super();
-    this.checkin = this.require('checkin');
-  }
-
-  start() {
-    const index = this.checkin.state.get('index');
-    const label = this.checkin.state.get('label');
-  }
-}
-```
-
-#### options
-
-### server
-
-#### registering the service
-
-```js
-// index.js
-import { Server } from '@soundworks/core/server';
-import serviceCheckinFactory from '@soundworks/service-checkin/server';
-
-const server = new Server();
-server.registerService('platform', serviceCheckinFactory, {
-  order: 'ascending',
-  capacity: 4,
-  labels: ['a', 'b', 'c', 'd'],
-}, []);
-```
-
-#### requiring the service 
-
-```js
-// MyExperience.js
-import { Experience } from '@soundworks/core/server';
-
-class MyExperience extends Experience {
-  constructor() {
-    super();
+  constructor(client) {
+    super(client);
+    // require plugin in the experience
     this.checkin = this.require('checkin');
   }
 }
 ```
 
-#### options
+### Accessing index and data client side
 
-- `order`: order in which the indexes are attributed to clients, `random` or `ascending` (default)
-- `capacity`: number of places that can be attributed
-- `labels`: optionnal labels associated with the index
+The following API is only available client-side
+
+```js
+const { index, data } = this.checkin.getValues();
+// or individually
+const index = this.checkin.get('index');
+const data = this.checkin.get('data');
+```
+
+## Credits
+
+The code has been initiated in the framework of the WAVE and CoSiMa research projects, funded by the French National Research Agency (ANR).
 
 ## License
 
 BSD-3-Clause
-

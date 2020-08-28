@@ -14,7 +14,9 @@ const serviceFactory = function(Service, Parameters) {
       this.state = await this.client.stateManager.create(`s:${this.name}`);
       this.started();
 
-      const unsubscribe = this.state.subscribe(({ index, label }) => {
+      const unsubscribe = this.state.subscribe(() => {
+        const { index, data } = this.state.getValues();
+
         if (index !== null) {
           this.ready();
         } else {
@@ -23,6 +25,14 @@ const serviceFactory = function(Service, Parameters) {
 
         unsubscribe();
       });
+    }
+
+    getValues() {
+      return this.state.getValues();
+    }
+
+    get(name) {
+      return this.state.get(name);
     }
   }
 }

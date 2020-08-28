@@ -1,2 +1,2 @@
-import serviceFactory from './service-checkin.js';
-export default serviceFactory;
+import pluginFactory from './plugin-checkin.js';
+export default pluginFactory;
