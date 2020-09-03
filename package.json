@@ -1,6 +1,6 @@
 {
   "name": "@soundworks/plugin-checkin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "soundworks plugin to assign a ticket to a client",
   "authors": [
     "Benjamin Matuszewski"
