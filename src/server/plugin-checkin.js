@@ -19,7 +19,7 @@ const pluginFactory = function(AbstractPlugin) {
       const defaults = {
         order: 'ascending', // ['ascending', 'random']
         capacity: Infinity,
-        infos: [],
+        data: [],
       };
 
       this.options = this.configure(defaults, options);
@@ -43,7 +43,7 @@ const pluginFactory = function(AbstractPlugin) {
         options.capacity = Infinity;
       }
 
-      // clamp capacity to given positions and data
+      // clamp capacity to given data
       const numData = options.data.length > 0 ? options.data.length : Infinity;
 
       if (numData < options.capacity) {
