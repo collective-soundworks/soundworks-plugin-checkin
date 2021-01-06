@@ -73,22 +73,29 @@ const pluginFactory = function(AbstractPlugin) {
             this.states.delete(clientId);
           });
 
-          // set client index
-          const { capacity, order, data } = this.options;
-          let index = null;
-          let datum = null;
+          // @note: we can't use this approach as:
+          // when running several node clients the same computer as the server,
+          // a concurrency problem seems to occur, the update notifiaction being
+          // received before the create Promise is resolved
+          // so we just do pre-request (see `connect`) as a workaround for now
+          //
+          // @todo: this problem should be solved (if only possible) at the
+          // StateManager level, however I don't see how to do that right now...
 
-          if (order === 'random') {
-            index = this._getRandomIndex();
-          } else {
-            index = this._getAscendingIndex();
-          }
+          // const { capacity, order, data } = this.options;
+          // let index = null;
+          // let datum = null;
 
-          if (index !== null && data[index]) {
-            datum = data[index];
-          }
+          // if (order === 'random') {
+          //   index = this._getRandomIndex();
+          // } else {
+          //   index = this._getAscendingIndex();
+          // }
 
-          state.set({ index: index, data: datum });
+          // if (index !== null && data[index]) {
+          //   datum = data[index];
+          // }
+          // state.set({ index: index, data: datum });
         }
       });
 
@@ -98,6 +105,26 @@ const pluginFactory = function(AbstractPlugin) {
 
     connect(client) {
       super.connect(client);
+
+      client.socket.addListener(`s:${this.name}:init-values:request`, () => {
+        client.socket.removeAllListeners(`s:${this.name}:init-values:request`);
+        // set client index
+        const { capacity, order, data } = this.options;
+        let index = null;
+        let datum = null;
+
+        if (order === 'random') {
+          index = this._getRandomIndex();
+        } else {
+          index = this._getAscendingIndex();
+        }
+
+        if (index !== null && data[index]) {
+          datum = data[index];
+        }
+
+        client.socket.send(`s:${this.name}:init-values:response`, index, datum);
+      });
     }
 
     disconnect(client) {

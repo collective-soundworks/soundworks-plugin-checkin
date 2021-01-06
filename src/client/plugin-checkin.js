@@ -4,27 +4,24 @@ const serviceFactory = function(Service, Parameters) {
     constructor(client, name, options) {
       super(client, name);
 
-      // we don't have client-side options here
       const defaults = {};
 
       this.configure(defaults);
     }
 
     async start() {
-      this.state = await this.client.stateManager.create(`s:${this.name}`);
       this.started();
 
-      const unsubscribe = this.state.subscribe(() => {
-        const { index, data } = this.state.getValues();
-
-        if (index !== null) {
-          this.ready();
-        } else {
+      this.client.socket.addListener(`s:${this.name}:init-values:response`, async (index, data) => {
+        if (index === null) {
           this.error();
+        } else {
+          this.state = await this.client.stateManager.create(`s:${this.name}`, { index, data });
+          this.ready();
         }
-
-        unsubscribe();
       });
+
+      this.client.socket.send(`s:${this.name}:init-values:request`);
     }
 
     getValues() {
@@ -36,8 +33,5 @@ const serviceFactory = function(Service, Parameters) {
     }
   }
 }
-
-// not mandatory
-serviceFactory.defaultName = 'checkin';
 
 export default serviceFactory;
