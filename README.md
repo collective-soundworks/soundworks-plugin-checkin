@@ -47,11 +47,12 @@ server.pluginManager.register('checkin', pluginCheckinFactory, {
   // order in which the tickets are assigned
   // defaults to 'ascending'
   order: 'random',
-  // number of tickets that can be delivered, must be defined
-  // if order is set to random
+  // optionnal number of tickets that can be delivered, 
+  // must be defined if order is set to random
   capacity: 4,
-  // data associated to each delivered index, if capacity is not defined
-  // or data.length < capacity, capacity is set to data.length
+  // optionnal data associated to each delivered index, 
+  // if capacity is not defined or data.length < capacity, 
+  // capacity is set to data.length
   data: ['a', 'b', 'c', 'd'],
 }, []);
 ```
