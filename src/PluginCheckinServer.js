@@ -3,6 +3,20 @@ const pluginFactory = function(Plugin) {
    * Server-side representation of the soundworks' checkin plugin.
    */
   class PluginCheckinServer extends Plugin {
+    /**
+     * The constructor should never be called manually. The plugin will be
+     * instantiated by soundworks when registered in the `pluginManager`
+     *
+     * Available options:
+     * - `capacity` {number} [Infinity] - Number of available indexes
+     * - `data` {array} - optionnal data associated to a given index.
+     *
+     * @example
+     * server.pluginManager.register('checkin', pluginCheckin, {
+     *   capacity: 3,
+     *   data: [{ color: 'green' }, { color: 'yellow' }, { color: 'pink' }],
+     * });
+     */
     constructor(server, id, options = {}) {
       super(server, id);
 

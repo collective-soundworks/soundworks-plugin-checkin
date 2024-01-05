@@ -1,6 +1,6 @@
-# `@soundworks/plugin-checkin`
+# soundworks | plugin checkin
 
-> [`soundworks`](https://github.com/collective-soundworks/soundworks) plugin for assigning a ticket (unique index) to the client among the available ones. The number of available tickets can be limited and tickets can be associated with additional data.
+[`soundworks`](https://soundworks.dev) plugin to assign a unique index to the clients among the available ones. When a client disconnects, it's ticket is recycled into the pool of available ticket and can be re-assigned to a newly connected client. The number of available indexes can be limited and can be associated to additional data.
 
 ## Table of Contents
 
@@ -98,6 +98,23 @@ Return the associated data given to the client (if any)
 Server-side representation of the soundworks' checkin plugin.
 
 **Kind**: global class  
+<a name="new_PluginCheckinServer_new"></a>
+
+#### new PluginCheckinServer()
+The constructor should never be called manually. The plugin will be
+instantiated by soundworks when registered in the `pluginManager`
+
+Available options:
+- `capacity` {number} [Infinity] - Number of available indexes
+- `data` {array} - optionnal data associated to a given index.
+
+**Example**  
+```js
+server.pluginManager.register('checkin', pluginCheckin, {
+  capacity: 3,
+  data: [{ color: 'green' }, { color: 'yellow' }, { color: 'pink' }],
+});
+```
 
 <!-- apistop -->
 
