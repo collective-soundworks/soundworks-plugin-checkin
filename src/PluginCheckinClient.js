@@ -23,7 +23,7 @@ const pluginFactory = function(Plugin) {
       return new Promise((resolve, reject) => {
         this.client.socket.addListener(`sw:plugin:${this.id}:res`, async (index, data) => {
           if (index === null) {
-            throw new Error(`[soundworks:plugin-checkin] Could not retrieve index`);
+            reject(new Error(`[soundworks:plugin-checkin] No index available`));
           } else {
             this._state.index = index;
             this._state.data = data;

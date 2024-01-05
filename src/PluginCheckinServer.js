@@ -21,7 +21,7 @@ const pluginFactory = function(Plugin) {
       super(server, id);
 
       const defaults = {
-        order: 'ascending', // ['ascending', 'random']
+        order: 'ascending', // do not document, let's see if someone needs it
         capacity: Infinity,
         data: [],
       };
