@@ -1,5 +1,7 @@
 # soundworks | plugin checkin
 
+[![npm version](https://badge.fury.io/js/@soundworks%2Fplugin-checkin.svg)](https://badge.fury.io/js/@soundworks%2Fplugin-checkin)
+
 [`soundworks`](https://soundworks.dev) plugin to assign a unique index to the clients among the available ones. When a client disconnects, it's ticket is recycled into the pool of available ticket and can be re-assigned to a newly connected client. The number of available indexes can be limited and can be associated to additional data.
 
 ## Table of Contents
