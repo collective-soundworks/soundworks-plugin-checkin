@@ -7,15 +7,13 @@
 <!-- toc -->
 
 - [Installation](#installation)
-- [Example](#example)
 - [Usage](#usage)
-  * [Server installation](#server-installation)
-    + [Registering the plugin](#registering-the-plugin)
-    + [Requiring the plugin](#requiring-the-plugin)
-  * [Client installation](#client-installation)
-    + [Registering the plugin](#registering-the-plugin-1)
-    + [Requiring the plugin](#requiring-the-plugin-1)
-  * [Accessing index and data client side](#accessing-index-and-data-client-side)
+  * [Server](#server)
+  * [Client](#client)
+- [API](#api)
+  * [Classes](#classes)
+  * [PluginCheckinClient](#plugincheckinclient)
+  * [PluginCheckinServer](#plugincheckinserver)
 - [Credits](#credits)
 - [License](#license)
 
@@ -27,94 +25,86 @@
 npm install @soundworks/plugin-checkin --save
 ```
 
-## Example
-
-A working example can be found in the [https://github.com/collective-soundworks/soundworks-examples](https://github.com/collective-soundworks/soundworks-examples) repository.
-
 ## Usage
 
-### Server installation
-
-#### Registering the plugin
+### Server
 
 ```js
 // index.js
-import { Server } from '@soundworks/core/server';
-import pluginCheckinFactory from '@soundworks/plugin-checkin/server';
+import { Server } from '@soundworks/core/server.js';
+import pluginCheckin from '@soundworks/plugin-checkin/server.js';
 
 const server = new Server();
-server.pluginManager.register('checkin', pluginCheckinFactory, {
-  // order in which the tickets are assigned
-  // defaults to 'ascending'
-  order: 'random',
-  // optionnal number of tickets that can be delivered, 
-  // must be defined if order is set to random
-  capacity: 4,
-  // optionnal data associated to each delivered index, 
-  // if capacity is not defined or data.length < capacity, 
-  // capacity is set to data.length
-  data: ['a', 'b', 'c', 'd'],
-}, []);
+server.pluginManager.register('checkin', pluginCheckin);
 ```
 
-#### Requiring the plugin
-
-```js
-// MyExperience.js
-import { AbstractExperience } from '@soundworks/core/server';
-
-class MyExperience extends AbstractExperience {
-  constructor(server, clientType) {
-    super(server, clientType);
-    // require plugin in the experience
-    this.checkin = this.require('checkin');
-  }
-}
-```
-
-### Client installation
-
-#### Registering the plugin
+### Client
 
 ```js
 // index.js
-import { Client } from '@soundworks/core/client';
-import pluginCheckinFactory from '@soundworks/plugin-checkin/client';
+import { Client } from '@soundworks/core/client.js';
+import pluginCheckin from '@soundworks/plugin-checkin/client.js';
 
 const client = new Client();
-client.pluginManager.register('checkin', pluginCheckinFactory, {}, []);
+client.pluginManager.register('checkin', pluginCheckin);
+
+await client.start();
+
+const checkin = await client.pluginManager.get('checkin');
+const index = checkin.getIndex();
 ```
 
-#### Requiring the plugin
+## API
 
-```js
-// MyExperience.js
-import { Experience } from '@soundworks/core/client';
+<!-- api -->
 
-class MyExperience extends Experience {
-  constructor(client) {
-    super(client);
-    // require plugin in the experience
-    this.checkin = this.require('checkin');
-  }
-}
-```
+### Classes
 
-### Accessing index and data client side
+<dl>
+<dt><a href="#PluginCheckinClient">PluginCheckinClient</a></dt>
+<dd><p>Client-side representation of the soundworks&#39; checkin plugin.</p>
+</dd>
+<dt><a href="#PluginCheckinServer">PluginCheckinServer</a></dt>
+<dd><p>Server-side representation of the soundworks&#39; checkin plugin.</p>
+</dd>
+</dl>
 
-The following API is only available client-side
+<a name="PluginCheckinClient"></a>
 
-```js
-const { index, data } = this.checkin.getValues();
-// or individually
-const index = this.checkin.get('index');
-const data = this.checkin.get('data');
-```
+### PluginCheckinClient
+Client-side representation of the soundworks' checkin plugin.
+
+**Kind**: global class  
+
+* [PluginCheckinClient](#PluginCheckinClient)
+    * [.getIndex()](#PluginCheckinClient+getIndex) ⇒ <code>number</code>
+    * [.getData()](#PluginCheckinClient+getData) ⇒ <code>mixed</code>
+
+<a name="PluginCheckinClient+getIndex"></a>
+
+#### pluginCheckinClient.getIndex() ⇒ <code>number</code>
+Return the unique index given to the client
+
+**Kind**: instance method of [<code>PluginCheckinClient</code>](#PluginCheckinClient)  
+<a name="PluginCheckinClient+getData"></a>
+
+#### pluginCheckinClient.getData() ⇒ <code>mixed</code>
+Return the associated data given to the client (if any)
+
+**Kind**: instance method of [<code>PluginCheckinClient</code>](#PluginCheckinClient)  
+<a name="PluginCheckinServer"></a>
+
+### PluginCheckinServer
+Server-side representation of the soundworks' checkin plugin.
+
+**Kind**: global class  
+
+<!-- apistop -->
 
 ## Credits
 
-The code has been initiated in the framework of the WAVE and CoSiMa research projects, funded by the French National Research Agency (ANR).
+[https://soundworks.dev/credits.html](https://soundworks.dev/credits.html)
 
 ## License
 
-BSD-3-Clause
+[BSD-3-Clause](./LICENSE)
