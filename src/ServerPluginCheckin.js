@@ -2,26 +2,28 @@ import { ServerPlugin } from '@soundworks/core/server.js';
 
 /**
  * Server-side representation of the check-in plugin.
+ *
+ * The constructor should never be called manually. The plugin will be
+ * automatically instantiated when registered in the `pluginManager`.
+ *
+ * Available options:
+ * - `capacity` {number} [Infinity] - Number of available indexes
+ * - `data` {array} - optional data associated to a given index.
+ *
+ * @example
+ * import ServerPluginCheckin from '@soundworks/plugin-checkin/server.js';
+ *
+ * server.pluginManager.register('checkin', ServerPluginCheckin, {
+ *   capacity: 3,
+ *   data: [{ color: 'green' }, { color: 'yellow' }, { color: 'pink' }],
+ * });
  */
 export default class ServerPluginCheckin extends ServerPlugin {
   #availableIndices = []; // array of available indices
   #nextAscendingIndex = 0; // next index when #availableIndices is empty
   #clientIndexMap = new Map();
 
-  /**
-   * The constructor should never be called manually. The plugin will be
-   * instantiated by soundworks when registered in the `pluginManager`
-   *
-   * Available options:
-   * - `capacity` {number} [Infinity] - Number of available indexes
-   * - `data` {array} - optional data associated to a given index.
-   *
-   * @example
-   * server.pluginManager.register('checkin', pluginCheckin, {
-   *   capacity: 3,
-   *   data: [{ color: 'green' }, { color: 'yellow' }, { color: 'pink' }],
-   * });
-   */
+  /** @hideconstructor */
   constructor(server, id, options = {}) {
     super(server, id);
 

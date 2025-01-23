@@ -2,8 +2,12 @@ import { ClientPlugin } from '@soundworks/core/client.js';
 
 /**
  * Client-side representation of the check-in plugin.
+ *
+ * The constructor should never be called manually. The plugin will be
+ * automatically instantiated when registered in the `pluginManager`.
  */
 export default class ClientPluginCheckin extends ClientPlugin {
+  /** @hideconstructor */
   constructor(client, id, options) {
     super(client, id);
 

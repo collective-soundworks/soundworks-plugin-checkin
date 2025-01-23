@@ -8,8 +8,8 @@
   "license": "BSD-3-Clause",
   "type": "module",
   "exports": {
-    "./client.js": "./src/PluginCheckinClient.js",
-    "./server.js": "./src/PluginCheckinServer.js"
+    "./client.js": "./src/ClientPluginCheckin.js",
+    "./server.js": "./src/ServerPluginCheckin.js"
   },
   "scripts": {
     "api": "jsdoc-to-readme --src src/*.js",
