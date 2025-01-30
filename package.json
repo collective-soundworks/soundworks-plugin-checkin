@@ -1,6 +1,6 @@
 {
   "name": "@soundworks/plugin-checkin",
-  "version": "2.0.0-alpha.0",
+  "version": "5.0.0",
   "description": "soundworks plugin to assign a unique index to a client",
   "authors": [
     "Benjamin Matuszewski"
