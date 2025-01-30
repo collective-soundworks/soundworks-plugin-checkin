@@ -1,6 +1,8 @@
-tests
-.babelrc
 .editorconfig
+tsconfig.json
+eslint.config.json
+
+tests
 
 # junk files
 .DS_Store

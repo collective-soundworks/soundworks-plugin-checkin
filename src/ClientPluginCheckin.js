@@ -7,6 +7,11 @@ import { ClientPlugin } from '@soundworks/core/client.js';
  * automatically instantiated when registered in the `pluginManager`.
  */
 export default class ClientPluginCheckin extends ClientPlugin {
+  #state = {
+    index: null,
+    data: null,
+  };
+
   /** @hideconstructor */
   constructor(client, id, options) {
     super(client, id);
@@ -14,11 +19,6 @@ export default class ClientPluginCheckin extends ClientPlugin {
     const defaults = {};
 
     this.options = Object.assign(defaults, options);
-
-    this._state = {
-      index: null,
-      data: null,
-    };
   }
 
   /** @private */
@@ -30,8 +30,8 @@ export default class ClientPluginCheckin extends ClientPlugin {
         if (index === null) {
           reject(new DOMException(`Cannot execute 'start' on PluginCheckinClient: No index available`, 'IndexSizeError'));
         } else {
-          this._state.index = index;
-          this._state.data = data;
+          this.#state.index = index;
+          this.#state.data = data;
           resolve();
         }
       });
@@ -45,7 +45,7 @@ export default class ClientPluginCheckin extends ClientPlugin {
    * @return {number}
    */
   getIndex() {
-    return this._state.index;
+    return this.#state.index;
   }
 
   /**
@@ -53,7 +53,7 @@ export default class ClientPluginCheckin extends ClientPlugin {
    * @return {any}
    */
   getData() {
-    return this._state.data;
+    return this.#state.data;
   }
 }
 
