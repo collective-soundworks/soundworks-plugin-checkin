@@ -12,12 +12,9 @@ When a client disconnects, it's index is recycled into the pool of available ind
 
 - [Installation](#installation)
 - [Usage](#usage)
-  * [Server](#server)
-  * [Client](#client)
 - [API](#api)
-  * [Classes](#classes)
-  * [PluginCheckinClient](#plugincheckinclient)
-  * [PluginCheckinServer](#plugincheckinserver)
+- [ClientPluginCheckin](#clientplugincheckin)
+- [ServerPluginCheckin](#serverplugincheckin)
 - [Credits](#credits)
 - [License](#license)
 
