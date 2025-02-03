@@ -1,6 +1,6 @@
 .editorconfig
 tsconfig.json
-eslint.config.json
+eslint.config.js
 
 tests
 
